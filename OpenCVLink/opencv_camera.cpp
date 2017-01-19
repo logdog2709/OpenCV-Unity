@@ -5,15 +5,15 @@ extern "C"
 {
 	__declspec(dllexport) void* getCamera()
 	{
-		// ウィンドウを開く
-		cv::namedWindow("hoge", CV_WINDOW_AUTOSIZE | CV_WINDOW_FREERATIO);
+		
+		cv::namedWindow("preview", CV_WINDOW_AUTOSIZE | CV_WINDOW_FREERATIO);
 		return static_cast<void*>(new cv::VideoCapture(0));
 	}
 
 	__declspec(dllexport) void releaseCamera(void* camera)
 	{
-		// ウィンドウを閉じる
-		cv::destroyWindow("hoge");
+		
+		cv::destroyWindow("preview");
 		auto vc = static_cast<cv::VideoCapture*>(camera);
 		delete vc;
 	}
@@ -22,18 +22,17 @@ extern "C"
 	{
 		auto vc = static_cast<cv::VideoCapture*>(camera);
 
-		// カメラ画の取得
+		
 		cv::Mat img;
 		*vc >> img;
 
-		// リサイズ
+		
 		cv::Mat resized_img(height, width, img.type());
 		cv::resize(img, resized_img, resized_img.size(), cv::INTER_CUBIC);
 
-		// 別ウィンドウの画を更新
-		cv::imshow("hoge", resized_img);
-
-		// RGB --> ARGB 変換
+		
+		cv::imshow("preview", resized_img);
+		
 		cv::Mat argb_img;
 		cv::cvtColor(resized_img, argb_img, CV_RGB2BGRA);
 		std::vector<cv::Mat> bgra;
